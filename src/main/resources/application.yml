@@ -13,3 +13,6 @@ management:
     web:
       exposure:
         include: health,info
+
+security:
+  card-encryption-key: "V4YfXK7M7DpAeLq5j1mJ3eXxJq+zWvHcYz3mR8N9pQ0="

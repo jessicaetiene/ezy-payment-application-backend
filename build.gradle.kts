@@ -10,12 +10,8 @@ description = "ezy-payment-application-backend"
 
 java {
     toolchain {
-        languageVersion = JavaLanguageVersion.of(17)
+        languageVersion = JavaLanguageVersion.of(21)
     }
-}
-
-repositories {
-    mavenCentral()
 }
 
 dependencies {

@@ -27,7 +27,7 @@ The application exposes REST endpoints to:
 
 ## Technology stack
 
-- Java 17
+- Java 21
 - Spring Boot 3.3.5
 - Spring Web
 - Spring Data MongoDB
@@ -108,7 +108,7 @@ When a payment is created, `WebhookEventPublisher` reads all registered webhooks
 
 Install the following before running the project:
 
-- Java 17 or newer compatible with Java 17 toolchains.
+- Java 21 or newer compatible with Java 21 toolchains.
 - Docker and Docker Compose, for local MongoDB.
 - Bash-compatible shell, macOS/Linux/WSL, or use `gradlew.bat` on Windows.
 

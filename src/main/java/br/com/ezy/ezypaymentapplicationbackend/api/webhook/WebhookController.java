@@ -1,6 +1,9 @@
-package br.com.ezy.ezypaymentapplicationbackend.api.payment;
+package br.com.ezy.ezypaymentapplicationbackend.api.webhook;
 
+import br.com.ezy.ezypaymentapplicationbackend.api.payment.PaymentRequest;
+import br.com.ezy.ezypaymentapplicationbackend.api.payment.PaymentResponse;
 import br.com.ezy.ezypaymentapplicationbackend.application.payment.CreatePaymentUseCase;
+import br.com.ezy.ezypaymentapplicationbackend.application.webhook.CreateWebhookPaymentUseCase;
 import br.com.ezy.ezypaymentapplicationbackend.config.exception.ApiResponseError;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.media.Content;
@@ -17,35 +20,33 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 @Tag(
-        name = "Payments",
+        name = "Webhooks",
         description = "Endpoint to create a new payment"
 )
 @RestController
-@RequestMapping("/payments")
-public class PaymentController {
+@RequestMapping("/webhooks")
+public class WebhookController {
 
-    private final CreatePaymentUseCase createPaymentUseCase;
+    private final CreateWebhookPaymentUseCase createWebhookPaymentUseCase;
 
-    public PaymentController(CreatePaymentUseCase createPaymentUseCase) {
-        this.createPaymentUseCase = createPaymentUseCase;
+    public WebhookController(CreateWebhookPaymentUseCase createWebhookPaymentUseCase) {
+        this.createWebhookPaymentUseCase = createWebhookPaymentUseCase;
     }
 
     @Operation(
-            summary = "Create a payment",
-            description = "Creates a new payment and send async webhook notifications."
+            summary = "Create a webhook",
+            description = "Creates a new webhook."
     )
     @ApiResponses({
             @ApiResponse(
                     responseCode = "201",
-                    description = "Payment created successfully",
+                    description = "Webhook created successfully",
                     content = @Content(
                             mediaType = "application/json",
                             schema = @Schema(implementation = PaymentResponse.class),
                             examples = @ExampleObject(value = """
                                     {
-                                      "firstName": "Jessica",
-                                      "lastName": "Almeida",
-                                      "zipCode": "01023-999"
+                                      "url": "https://webhook",
                                     }
                                     """)
                     )
@@ -58,13 +59,13 @@ public class PaymentController {
                             schema = @Schema(implementation = ApiResponseError.class),
                             examples = @ExampleObject(value = """
                                     {
-                                    	"timestamp": "2026-05-14T17:07:43.368175Z",
+                                    	"timestamp": "2026-05-14T17:14:53.485420Z",
                                     	"status": 400,
                                     	"error": "Bad Request",
                                     	"message": "Validation Failed",
-                                    	"path": "/payments",
+                                    	"path": "/webhooks",
                                     	"details": [
-                                    		"firstName: não deve estar em branco"
+                                    		"url: must be a valid HTTP or HTTPS URL"
                                     	]
                                     }
                                     """)
@@ -72,10 +73,10 @@ public class PaymentController {
             )
     })
     @PostMapping
-    public ResponseEntity<PaymentResponse> create(@Valid @RequestBody PaymentRequest paymentRequest){
-        var payment = this.createPaymentUseCase.execute(paymentRequest);
+    public ResponseEntity<WebhookResponse> create(@Valid @RequestBody WebhookRequest webhookRequest){
+        var webhook = this.createWebhookPaymentUseCase.execute(webhookRequest);
         return ResponseEntity
                 .status(HttpStatus.CREATED)
-                .body(new PaymentResponse(payment.id(), payment.firstName(), payment.lastName(), payment.zipCode()));
+                .body(new WebhookResponse(webhook.id(), webhook.url()));
     }
 }

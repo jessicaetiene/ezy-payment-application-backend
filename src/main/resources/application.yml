@@ -2,8 +2,9 @@ spring:
   application:
     name: ezy-payment-application-backend
 
-  mongodb:
-    uri: mongodb://admin:admin@localhost:27017/mongo_api?authSource=admin
+  data:
+    mongodb:
+      uri: mongodb://root:root@localhost:27017/ezy-payment?authSource=admin
 
 server:
   port: 8080
@@ -16,3 +17,8 @@ management:
 
 security:
   card-encryption-key: "V4YfXK7M7DpAeLq5j1mJ3eXxJq+zWvHcYz3mR8N9pQ0="
+
+
+webhooks:
+  max-attempts: 5
+  retry-delay-ms: 30000

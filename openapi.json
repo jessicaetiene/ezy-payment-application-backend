@@ -1,0 +1,243 @@
+{
+  "openapi": "3.0.1",
+  "info": {
+    "title": "Payment Application",
+    "description": "API documentation for the Catalog Pricing Service",
+    "contact": {
+      "name": "Jessica Etiene Marques Almeida"
+    },
+    "version": "1.0.0"
+  },
+  "servers": [
+    {
+      "url": "http://localhost:8080",
+      "description": "Generated server url"
+    }
+  ],
+  "tags": [
+    {
+      "name": "Payments",
+      "description": "Endpoint to create a new payment"
+    },
+    {
+      "name": "Webhooks",
+      "description": "Endpoint to create a new payment"
+    }
+  ],
+  "paths": {
+    "/webhooks": {
+      "post": {
+        "tags": [
+          "Webhooks"
+        ],
+        "summary": "Create a webhook",
+        "description": "Creates a new webhook.",
+        "operationId": "create",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/WebhookRequest"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "201": {
+            "description": "Webhook created successfully",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/PaymentResponse"
+                },
+                "example": "{\n  \"url\": \"https://webhook\",\n}\n"
+              }
+            }
+          },
+          "400": {
+            "description": "Invalid request",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ApiResponseError"
+                },
+                "example": {
+                  "timestamp": "2026-05-14T17:14:53.485420Z",
+                  "status": 400,
+                  "error": "Bad Request",
+                  "message": "Validation Failed",
+                  "path": "/webhooks",
+                  "details": [
+                    "url: must be a valid HTTP or HTTPS URL"
+                  ]
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/payments": {
+      "post": {
+        "tags": [
+          "Payments"
+        ],
+        "summary": "Create a payment",
+        "description": "Creates a new payment and send async webhook notifications.",
+        "operationId": "create_1",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/PaymentRequest"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "201": {
+            "description": "Payment created successfully",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/PaymentResponse"
+                },
+                "example": {
+                  "firstName": "Jessica",
+                  "lastName": "Almeida",
+                  "zipCode": "01023-999"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Invalid request",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ApiResponseError"
+                },
+                "example": {
+                  "timestamp": "2026-05-14T17:07:43.368175Z",
+                  "status": 400,
+                  "error": "Bad Request",
+                  "message": "Validation Failed",
+                  "path": "/payments",
+                  "details": [
+                    "firstName: não deve estar em branco"
+                  ]
+                }
+              }
+            }
+          }
+        }
+      }
+    }
+  },
+  "components": {
+    "schemas": {
+      "WebhookRequest": {
+        "required": [
+          "url"
+        ],
+        "type": "object",
+        "properties": {
+          "url": {
+            "pattern": "https?://.+",
+            "type": "string",
+            "description": "Url",
+            "example": "https://webhook"
+          }
+        }
+      },
+      "ApiResponseError": {
+        "type": "object",
+        "properties": {
+          "timestamp": {
+            "type": "string",
+            "format": "date-time",
+            "example": "2026-05-14T17:14:53.48542Z"
+          },
+          "status": {
+            "type": "integer",
+            "format": "int32",
+            "example": 400
+          },
+          "error": {
+            "type": "string",
+            "example": "Bad Request"
+          },
+          "message": {
+            "type": "string",
+            "example": "Validation Failed"
+          },
+          "path": {
+            "type": "string",
+            "example": "/webhooks"
+          },
+          "details": {
+            "type": "array",
+            "example": "[url: must be a valid HTTP or HTTPS URL]",
+            "items": {
+              "type": "string",
+              "example": "[url: must be a valid HTTP or HTTPS URL]"
+            }
+          }
+        }
+      },
+      "PaymentResponse": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string",
+            "description": "Payment unique identifier",
+            "example": "6a0601867a3bf641f16744ec"
+          },
+          "firstName": {
+            "type": "string",
+            "description": "First Name",
+            "example": "John"
+          },
+          "lastName": {
+            "type": "string",
+            "description": "Last Name",
+            "example": "Doe"
+          },
+          "zipCode": {
+            "type": "string",
+            "description": "Zip code",
+            "example": "01234-567"
+          }
+        }
+      },
+      "PaymentRequest": {
+        "required": [
+          "cardNumber"
+        ],
+        "type": "object",
+        "properties": {
+          "firstName": {
+            "type": "string",
+            "description": "First Name",
+            "example": "John"
+          },
+          "lastName": {
+            "type": "string",
+            "description": "Last Name",
+            "example": "Doe"
+          },
+          "zipCode": {
+            "type": "string",
+            "description": "Zip code",
+            "example": "01234-567"
+          },
+          "cardNumber": {
+            "type": "string"
+          }
+        }
+      }
+    }
+  }
+}
